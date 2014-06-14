@@ -1,4 +1,3 @@
-import java.util.LinkedList;
 import java.util.List;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -9,21 +8,29 @@ import java.util.HashMap;
 
 public class Countdown {
 
-    List<Character> letters = new LinkedList<Character>();
+    Map<Character, Integer> count = new HashMap<Character, Integer>();
     String regex = "";
 
-    public Countdown(String sletters) throws IOException {
+    public Countdown(String letters) throws IOException {
         //add to list
+        for (char c : letters.toLowerCase().toCharArray()) {
 
-        for (char c : sletters.toLowerCase().toCharArray()) {
-            letters.add(c);
+            //if not in regex add
             if (!regex.contains(Character.toString(c))) {
                 regex += c;
             }
+
+            //if char not in map
+            if (!count.containsKey(c)) {
+                count.put(c, 0);
+            }
+
+            //increase count of char
+            count.put(c, count.get(c) + 1);
         }
 
         //build regex string
-        regex = "^["+regex+"]+$";
+        regex = "^[" + regex + "]+$";
 
         //read in word list
         List<String> lines = readFile("words.txt");
@@ -43,6 +50,23 @@ public class Countdown {
         }
     }
 
+    public static void main(String[] args) throws IOException {
+        //make sure we have some input
+        if (args.length > 0) {
+
+            //make sure only 9 letters
+            if (args[0].length() == 9) {
+
+                //pass into constructor
+                Countdown c = new Countdown(args[0].toString());
+            } else {
+                System.out.println("Need nine letters.");
+            }
+        } else {
+            System.out.println("Need some letters.");
+        }
+    }
+
     public List<String> readFile(String filename) throws IOException {
         //file reader inside buffered reader
         BufferedReader br = new BufferedReader(new FileReader(filename));
@@ -59,23 +83,6 @@ public class Countdown {
         //close reader and return list of words
         br.close();
         return lines;
-    }
-
-    public static void main(String[] args) throws IOException {
-        //make sure we have some input
-        if (args.length > 0) {
-
-            //make sure only 9 letters
-            if (args[0].length() == 9) {
-
-                //pass into constructor
-                Countdown c = new Countdown(args[0].toString());
-            } else {
-                System.out.println("Need nine letters.");
-            }
-        } else {
-            System.out.println("Need some letters.");
-        }
     }
 
 }
