@@ -40,7 +40,13 @@ public class Countdown {
 
     public static void main(String[] args) throws IOException {
         if (args.length > 0) {
-            Countdown c = new Countdown(args[0]);
+            if (args[0].length() == 9) {
+                Countdown c = new Countdown(args[0]);
+            } else {
+                System.out.println("Need nine letters.");
+            }
+        } else {
+            System.out.println("Need some letters.");
         }
     }
 
