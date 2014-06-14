@@ -9,9 +9,10 @@ import java.util.HashMap;
 
 public class Countdown {
 
-    public static void main(String[] args) throws IOException {
-        List<Character> letters = new LinkedList<Character>();
-        for (char l : args[0].toCharArray()) {
+    List<Character> letters = new LinkedList<Character>();
+
+    public Countdown(String sletters) throws IOException{
+        for (char l : sletters.toCharArray()) {
             letters.add(l);
         }
 
@@ -26,8 +27,7 @@ public class Countdown {
         }
     }
 
-
-    public static List<String> readFile(String filename) throws IOException {
+    public List<String> readFile(String filename) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(filename));
         List<String> lines = new ArrayList<String>();
         String line = null;
@@ -36,6 +36,12 @@ public class Countdown {
         }
         br.close();
         return lines;
+    }
+
+    public static void main(String[] args) throws IOException {
+        if (args.length > 0) {
+            Countdown c = new Countdown(args[0]);
+        }
     }
 
 }
