@@ -4,16 +4,26 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 public class Countdown {
 
     public static void main(String[] args) throws IOException {
-        List<Character> letters = new LinkedList <Character>();
+        List<Character> letters = new LinkedList<Character>();
         for (char l : args[0].toCharArray()) {
             letters.add(l);
         }
+
         List<String> lines = readFile("words.txt");
-        System.out.println(lines.get(5));
+        Map<Integer, ArrayList<String>> lengths = new HashMap<Integer, ArrayList<String>>();
+        for (String w : lines) {
+            int length = w.length();
+            if (!lengths.containsKey(length)) {
+                lengths.put(length, new ArrayList<String>());
+            }
+            lengths.get(length).add(w);
+        }
     }
 
 
