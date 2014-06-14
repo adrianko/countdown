@@ -10,27 +10,36 @@ import java.util.HashMap;
 public class Countdown {
 
     List<Character> letters = new LinkedList<Character>();
+    String regex = "";
 
-    public Countdown(String sletters) throws IOException{
-        //add letters into char list
-        for (char l : sletters.toCharArray()) {
-            letters.add(l);
+    public Countdown(String sletters) throws IOException {
+        //add to list
+
+        for (char c : sletters.toLowerCase().toCharArray()) {
+            letters.add(c);
+            if (!regex.contains(Character.toString(c))) {
+                regex += c;
+            }
         }
+
+        //build regex string
+        regex = "^["+regex+"]+$";
 
         //read in word list
         List<String> lines = readFile("words.txt");
         Map<Integer, ArrayList<String>> lengths = new HashMap<Integer, ArrayList<String>>();
         for (String w : lines) {
             //if only contains letters in char list then add to word list
+            if (w.matches(regex)) {
+                //word length
+                int length = w.length();
 
-            //word length
-            int length = w.length();
-
-            //check if word length as key exists
-            if (!lengths.containsKey(length)) {
-                lengths.put(length, new ArrayList<String>());
+                //check if word length as key exists
+                if (!lengths.containsKey(length)) {
+                    lengths.put(length, new ArrayList<String>());
+                }
+                lengths.get(length).add(w);
             }
-            lengths.get(length).add(w);
         }
     }
 
@@ -53,7 +62,6 @@ public class Countdown {
     }
 
     public static void main(String[] args) throws IOException {
-
         //make sure we have some input
         if (args.length > 0) {
 
@@ -61,7 +69,7 @@ public class Countdown {
             if (args[0].length() == 9) {
 
                 //pass into constructor
-                Countdown c = new Countdown(args[0]);
+                Countdown c = new Countdown(args[0].toString());
             } else {
                 System.out.println("Need nine letters.");
             }
