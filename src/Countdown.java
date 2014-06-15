@@ -70,7 +70,7 @@ public class Countdown {
             List<String> words = lengths.get(i);
 
             //escape for empty list
-            if (words.isEmpty()) {
+            if (words == null) {
                 continue;
             }
             //for each word in this set of lengths
