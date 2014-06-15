@@ -68,6 +68,11 @@ public class Countdown {
 
             //new list of words working on
             List<String> words = lengths.get(i);
+
+            //escape for empty list
+            if (words.isEmpty()) {
+                continue;
+            }
             //for each word in this set of lengths
             for (String w : words) {
 
