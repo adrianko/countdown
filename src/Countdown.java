@@ -1,16 +1,30 @@
-import java.util.List;
+import java.util.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
 
 public class Countdown {
 
+    /**
+     * Count occurrence of each character in input
+     */
     Map<Character, Integer> count = new HashMap<Character, Integer>();
+
+    /**
+     * For selecting the possible words
+     */
     String regex = "";
 
+    /**
+     * The generated list of possible words
+     */
+    List<String> possibles = new ArrayList<String>();
+
+    /**
+     * Main code body
+     * @param letters the string of characters
+     * @throws IOException
+     */
     public Countdown(String letters) throws IOException {
         //add to list
         for (char c : letters.toLowerCase().toCharArray()) {
@@ -36,11 +50,11 @@ public class Countdown {
         List<String> lines = readFile("words.txt");
         Map<Integer, ArrayList<String>> lengths = new HashMap<Integer, ArrayList<String>>();
         for (String w : lines) {
+
             //if only contains letters in char list then add to word list
             if (w.matches(regex)) {
                 //word length
                 int length = w.length();
-
                 //check if word length as key exists
                 if (!lengths.containsKey(length)) {
                     lengths.put(length, new ArrayList<String>());
@@ -48,8 +62,55 @@ public class Countdown {
                 lengths.get(length).add(w);
             }
         }
+
+        //each world length
+        for (int i = 9; i > 0; i--) {
+
+            //new list of words working on
+            List<String> words = lengths.get(i);
+            //for each word in this set of lengths
+            for (String w : words) {
+
+                //map for characters of word
+                Map<Character, Integer> char_count = new HashMap<Character, Integer>();
+                //count number of occurrences of each character
+                for (char c : w.toCharArray()) {
+
+                    //if doesn't contain, add and set to 0
+                    if (!char_count.containsKey(c)) {
+                        char_count.put(c, 0);
+                    }
+                    //increment count
+                    char_count.put(c, char_count.get(c) + 1);
+                }
+
+                //if map matches input then allow else, remove
+                boolean match = true;
+                for (Map.Entry<Character, Integer> p : char_count.entrySet()) {
+                    //if the character count number in the current map equals
+                    // the number in the entered list then move on
+                    // other wise word cannot be created from given character list
+                    if (!p.getValue().equals(count.get(p.getKey()))) {
+                        match = false;
+                        break;
+                    }
+                }
+
+                //number of each characters match so add to possibles
+                if (match) {
+                    possibles.add(w);
+                }
+            }
+        }
+
+        System.out.println(possibles);
     }
 
+    /**
+     * main
+     * @param args single, string of 9 chars
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
         //make sure we have some input
         if (args.length > 0) {
@@ -58,7 +119,7 @@ public class Countdown {
             if (args[0].length() == 9) {
 
                 //pass into constructor
-                Countdown c = new Countdown(args[0].toString());
+                Countdown c = new Countdown(args[0]);
             } else {
                 System.out.println("Need nine letters.");
             }
@@ -67,6 +128,12 @@ public class Countdown {
         }
     }
 
+    /**
+     * Reads in file and adds each line as entry in list
+     * @param filename name of the file
+     * @return List<String>
+     * @throws IOException
+     */
     public List<String> readFile(String filename) throws IOException {
         //file reader inside buffered reader
         BufferedReader br = new BufferedReader(new FileReader(filename));
